@@ -1,0 +1,79 @@
+/*BEFORE UPDATE*/
+
+delimiter $$
+create trigger beforeupdate
+before update on employee
+for each row 
+begin
+insert into eaudit values(old.id,old.deptid,old.empname,old.city,"updated",now());
+end$$
+delimiter ;
+update employee set empname="michael",deptid=2 where id=1;
+select * from eaudit;
+
+/*AFTER UPDATE*/
+
+delimiter $$
+create trigger afterupdate
+after update on employee
+for each row 
+begin
+insert into eaudit values(old.id,new.deptid,new.empname,old.city,"updated",now());
+end$$
+delimiter ;
+update employee set empname="sam",deptid=3 where id=2;
+select * from eaudit;
+select * from employee;
+
+/*BEFORE INSERT*/
+
+delimiter $$
+create trigger beforeinsert
+before insert on employee
+for each row 
+begin
+insert into eaudit values(new.id,new.deptid,new.empname,new.city,"inserted",now());
+end$$
+delimiter ;
+delete from employee where id=5;
+insert into employee values(5,3,"partha","usa");
+select * from eaudit;
+
+/*AFTER INSERT*/
+
+delimiter $$
+create trigger afterinsert
+after insert on employee
+for each row 
+begin
+insert into eaudit values(new.id,new.deptid,new.empname,new.city,"inserted",now());
+end$$
+delimiter ;
+insert into employee values(6,2,"pranav","usa");
+select * from eaudit;
+
+/*BEFORE DELETE*/
+
+delimiter $$
+create trigger beforedelete
+before delete on employee
+for each row 
+begin
+insert into eaudit values(old.id,old.deptid,old.empname,old.city,"deleted",now());
+end$$
+delimiter ;
+delete from employee where id=5;
+select * from eaudit;
+
+/*AFTER DELETE*/
+
+delimiter $$
+create trigger afterdelete
+after delete on employee
+for each row 
+begin
+insert into eaudit values(old.id,old.deptid,old.empname,old.city,"deleted",now());
+end$$
+delimiter ;
+delete from employee where id=4;
+select * from eaudit;
